@@ -1,4 +1,4 @@
-import smtplib, ssl
+import smtplib
 import random
 import os
 from email.mime.image import MIMEImage
