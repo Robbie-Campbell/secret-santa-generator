@@ -16,7 +16,7 @@ class EmailList:
         self.details = kwargs
 
     def shuffle_method(self):
-        return 0.1
+        return 0.2
 
     def shuffle(self):
         keys = list(self.details.keys())
@@ -59,7 +59,7 @@ class EmailList:
                 message['To'] = self.details[name]
                 message.attach(santa_clause)
 
-                server.sendmail(sender_email, self.details[name], message.as_string())
+                # server.sendmail(sender_email, self.details[name], message.as_string())
 
         except Exception as e:
             # Print any error messages to stdout
@@ -69,6 +69,16 @@ class EmailList:
 
 
 if __name__ == "__main__":
-    names = {"Sample": "email@email.com"} # Enter data here
+    names = {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9"
+    }  # Enter data here
     email = EmailList(**names)
-    email.email_sender()
+    print(email.shuffle())
