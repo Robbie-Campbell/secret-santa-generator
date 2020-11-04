@@ -4,7 +4,9 @@
 
 ##### This file takes in a dictionary into a constructor method, including emails and names, and when the email_sender function is run it assigns secret santa values to the end user.
 
-# This project used smtplib to send emails some new thing i have learned are:
+> :cool: This project now features a __VERY__ robust GUI with alot of error handling! :cool:
+
+# This project used smtplib to send emails. Some of the new things i have learned are:
 
 > smtp python linking
 
