@@ -116,7 +116,7 @@ class GUI:
             print(self.recipients)
             send = EmailList(**self.recipients)
             send.email_sender()
-            tk.messagebox.showinfo("Success!", "Emails have successfully been sent!", icon="info")
+            tk.messagebox.showinfo("Success!", "Emails have successfully been sent!\nMerry christmas!", icon="info")
             self.root.destroy()
 
         else:
