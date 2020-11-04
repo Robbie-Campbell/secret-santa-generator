@@ -5,24 +5,36 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter.font import Font
 
+from database import Database
 from logic import EmailList
 
 
 class GUI:
     def __init__(self):
 
-        # Initialise frame variables
+        # Define frame and root variables
         self.root = tk.Tk()
         self.font = Font(family="helvetica", size=9, weight="bold")
         self.root.title("Secret Santa Designator")
+        self.root.resizable(False, False)
+        self.root.geometry("+750+250")
         self.frame = tk.Frame(master=self.root).grid()
 
+        # Define a database to save user progress and populate the dictionary with existing data
+        self.database = Database("cache.db")
+        self.recipients = self.database.select_data()
+
         # Create Output area for names to be checked
-        self.names_display = tk.Text(self.frame, font=self.font,  width=50, height=15, state="disabled")
+        self.names_display = tk.Text(self.frame, font=self.font,  width=50, height=25)
         self.names_display.grid(row=0, column=0, columnspan=2)
 
-        # Initialise a data dictionary for user input
-        self.recipients = {}
+        # Display the data to the user if there is anything in the database
+        self.names_display.config(state="normal")
+        for key in self.recipients:
+            output_value = key + " : " + self.recipients[key]
+            self.names_display.insert("end", output_value + "\n" + "-" * round(len(output_value) * 1.5) + "\n")
+        self.database.close_db()
+        self.names_display.config(state="disabled")
 
         # Create entry areas and prompts
         self.name_label = tk.Label(self.frame, font=self.font,  text="Enter First Name of Recipient").grid(row=1, column=0)
@@ -63,7 +75,7 @@ class GUI:
     
     # Enter the details for each person
     def enter_name(self):
-        # Error handling
+        # Error handling for repeat values, empty input and not an email
         if self.email_input.get() in self.recipients.values():
             tk.messagebox.showinfo("Repetition!", "Email already entered!", icon="warning")
         elif self.email_input.get() == "" or self.name_input.get() == "":
@@ -73,11 +85,20 @@ class GUI:
 
         # Add to the dictionary
         else:
+            # Input the values into the cache database
+            self.database = Database("cache.db")
+            enter_value = (self.name_input.get(), self.email_input.get())
+            self.database.insert_data(enter_value)
+            self.database.close_db()
+
+            # Save the values in current memory
             self.recipients[self.name_input.get()] = self.email_input.get()
             self.names_display.config(state="normal")
             output_value = self.name_input.get() + " : " + self.email_input.get()
             self.names_display.insert("end", output_value + "\n" + "-" * round(len(output_value) * 1.5) + "\n")
             self.names_display.config(state="disabled")
+
+        # Reset to defaults
         self.name_input.set("")
         self.email_input.set("")
         self.name.focus_set()
@@ -85,6 +106,13 @@ class GUI:
     # Removes the last entered value from the dictionary
     def remove_last(self):
         try:
+
+            # Remove the most recent entry from the database
+            self.database = Database("cache.db")
+            self.database.remove_row(list(self.recipients.keys())[-1])
+            self.database.close_db()
+
+            # Remove the most recent entry from memory and repopulate the text area
             self.names_display.config(state="normal")
             self.names_display.delete("1.0", "end")
             self.recipients.pop(list(self.recipients.keys())[-1])
@@ -92,6 +120,8 @@ class GUI:
                 self.names_display.insert("end", key + " : " + self.recipients.get(key) + "\n")
             self.names_display.config(state="disabled")
             self.name.focus_set()
+
+        # Error handling for no available deletion
         except IndexError:
             tk.messagebox.showinfo("No Value Error!", "There are no values in the recipient list!", icon="warning")
 
@@ -100,12 +130,21 @@ class GUI:
         result = tk.messagebox.askquestion("Start Again!?", "Are You Sure you want to remove all entered "
                                            "recipients?", icon='warning')
         if result == 'yes':
+
+            # Remove all from the database
+            self.database = Database("cache.db")
+            self.database.clear_db()
+            self.database.close_db()
+
+            # Remove all from current memory
             self.recipients.clear()
             self.names_display.config(state="normal")
             self.names_display.delete("1.0", "end")
             self.names_display.config(state="disabled")
         else:
             return
+
+        # Reset to default
         self.name.focus_set()
 
     # Send all of the emails
@@ -113,7 +152,13 @@ class GUI:
         result = tk.messagebox.askquestion("Send emails", "Are you ready to spread christmas joy to the recipients?",
                                            icon='warning')
         if result == 'yes':
-            print(self.recipients)
+
+            # Remove all from the database
+            self.database = Database("cache.db")
+            self.database.clear_db()
+            self.database.close_db()
+
+            # Send the emails to the end users
             send = EmailList(**self.recipients)
             send.email_sender()
             tk.messagebox.showinfo("Success!", "Emails have successfully been sent!", icon="info")
@@ -121,4 +166,6 @@ class GUI:
 
         else:
             return
+
+        # Reset to default
         self.name.focus_set()
