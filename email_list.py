@@ -6,7 +6,7 @@ from tkinter import messagebox
 from tkinter.font import Font
 
 from database import DatabaseTables
-from logic import EmailList
+from logic import Logic
 
 
 class EmailList:
@@ -69,6 +69,9 @@ class EmailList:
         # Reset the names button
         self.reset = tk.Button(self.frame, pady=10, font=self.font, text="Reset entered names", bg="#060", fg="#FFF",
                                command=self.remove_all).grid(row=6, column=0, columnspan=2, sticky="W" + "E")
+
+        self.reconfigure_email = tk.Button(self.frame, pady=10, font=self.font, text="Reset Email Sender", bg="#000", fg="#FFF",
+                                           command=self.reset_email).grid(row=7, column=0, columnspan=2, sticky="W" + "E")
 
         self.root.mainloop()
         self.root.quit()
@@ -159,7 +162,7 @@ class EmailList:
             self.database.close_db()
 
             # Send the emails to the end users
-            send = EmailList(**self.recipients)
+            send = Logic(**self.recipients)
             send.email_sender()
             tk.messagebox.showinfo("Success!", "Emails have successfully been sent!", icon="info")
             self.root.destroy()
@@ -169,3 +172,10 @@ class EmailList:
 
         # Reset to default
         self.name.focus_set()
+
+    # Allows the user to use a different sender Address
+    def reset_email(self):
+        self.root.destroy()
+        database = DatabaseTables("sender.db")
+        database.clear_sender_info()
+        database.close_db()

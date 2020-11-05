@@ -7,6 +7,7 @@ from pass_hasher import encrypt_pass
 from database import DatabaseTables
 from email_list import EmailList
 
+# This class sets the email and app password of the sender device
 
 class Sender:
     def __init__(self):
@@ -31,9 +32,9 @@ class Sender:
         self.prompt1 = tk.Label(self.frame, pady=10, text="But without further ado, please enter the email and password"
                                 " of your gmail account: ", font=self.font, wraplength=300).grid(row=2, column=0, columnspan=2)
 
-        # Get the email and password of the user
+        # Get the email and app password of the user
         self.prompt2 = tk.Label(self.frame, text="Enter email:", font=self.font).grid(row=3, column=0)
-        self.prompt3 = tk.Label(self.frame, text="Enter Password:", font=self.font).grid(row=3, column=1)
+        self.prompt3 = tk.Label(self.frame, text="Enter Generated App Password:", font=self.font).grid(row=3, column=1)
         self.email_input = tk.StringVar()
         self.email = ttk.Entry(self.frame, width=30, textvariable=self.email_input)
         self.email.grid(row=4, column=0)
@@ -41,25 +42,33 @@ class Sender:
         self.password = ttk.Entry(self.frame, width=30, textvariable=self.password_input, show="*")
         self.password.grid(row=4, column=1)
         
-        # Submit Email and Password
+        # Submit Email and app password
         self.submit = tk.Button(self.frame, pady=15, text="SUBMIT SENDER INFO", bg="black", fg="white",
-                                command=self.submit_sender_acc)
+                                command=self.submit_sender_acc, font=self.font_alt)
         self.submit.grid(row=5, column=0, columnspan=2, sticky="w"+"e")
 
         self.root.mainloop()
         self.root.quit()
-        
+
+    # Confirms with the user that they are happy with entered details
     def submit_sender_acc(self):
         result = tk.messagebox.askquestion("Are you sure?", "Are you happy with the email sender details of "
                                             + self.email_input.get(), icon='warning')
         if result == 'yes':
+
+            # Makes sure the email address is a valid one
             if self.email_input.get().__contains__("@gmail.com"):
                 database = DatabaseTables("sender.db")
+                database.clear_sender_info()
+
+                # Enters data into database with encryption
                 sender_details = (self.email_input.get(), encrypt_pass(self.password_input.get()))
                 database.create_sender(sender_details)
                 database.close_db()
                 tk.messagebox.showinfo("Success!", "Sender email entered successfully!", icon="info")
                 self.root.destroy()
+
+                # Open the email list gui
                 EmailList()
             else:
                 tk.messagebox.showinfo("Enter a valid address!", "That isn't a gmail account!")

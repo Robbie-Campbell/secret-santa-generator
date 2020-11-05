@@ -5,7 +5,11 @@ from email_sender import Sender
 
 if __name__ == "__main__":
     database = DatabaseTables("sender.db")
-    if database.get_sender_info() is not None:
+    database.create_name_list_table()
+    database.create_name_list_table()
+    if database.get_sender_info():
         main_function = EmailList()
+        database.close_db()
     else:
         main_function = Sender()
+        database.close_db()

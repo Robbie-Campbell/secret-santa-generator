@@ -1,6 +1,6 @@
 import smtplib
 import random
-import os
+from pass_hasher import decrypt_pass
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -9,7 +9,10 @@ from email.mime.text import MIMEText
 
 
 # The class that passes in the Recipient information
-class EmailList:
+from database import DatabaseTables
+
+
+class Logic:
     def __init__(self, **kwargs):
         self.details = kwargs
 
@@ -24,8 +27,10 @@ class EmailList:
     def email_sender(self):
 
         # Create a secure connection to the server
-        sender_email = os.environ.get("DB_EMAIL")
-        password = os.environ.get("DB_PASSWORD")
+        database = DatabaseTables("sender.db")
+        sender_email = next(iter(database.get_sender_info()))
+        password = decrypt_pass(next(iter(database.get_sender_info().values())))
+        database.close_db()
 
         # Create a secure SSL context
         server = smtplib.SMTP('smtp.gmail.com', 25)

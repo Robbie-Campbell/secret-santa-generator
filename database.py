@@ -15,7 +15,7 @@ class DatabaseTables:
         except Error as e:
             print(e)
 
-    # Functions for setting the sender email
+    # --------------------------- EMAIL SENDER FUNCTIONS ------------------------- #
     def create_sender_table(self):
         create_sender_table = """
         CREATE TABLE IF NOT EXISTS sender (
@@ -45,7 +45,11 @@ class DatabaseTables:
             dictionary[value[0]] = value[1]
         return dictionary
 
-    # Create the name list table
+    def clear_sender_info(self):
+        self.cursor.execute("DELETE FROM sender")
+        self.conn.commit()
+
+    # --------------------------- RECIPIENT FUNCTIONS ------------------------- #
     def create_name_list_table(self):
         create_main_table = """
         CREATE TABLE IF NOT EXISTS cache (
