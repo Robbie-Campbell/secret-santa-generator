@@ -6,7 +6,7 @@ from tkinter import messagebox
 from tkinter.font import Font
 
 from database import DatabaseTables
-from logic import Logic
+from Logic.logic import Logic
 
 
 class EmailList:
@@ -21,7 +21,7 @@ class EmailList:
         self.frame = tk.Frame(master=self.root).grid()
 
         # Define a database to save user progress and populate the dictionary with existing data
-        self.database = DatabaseTables("cache.db")
+        self.database = DatabaseTables()
         self.recipients = self.database.select_data()
 
         # Create Output area for names to be checked
@@ -89,7 +89,7 @@ class EmailList:
         # Add to the dictionary
         else:
             # Input the values into the cache database
-            self.database = DatabaseTables("cache.db")
+            self.database = DatabaseTables()
             enter_value = (self.name_input.get().capitalize(), self.email_input.get())
             self.database.insert_data(enter_value)
             self.database.close_db()
@@ -111,7 +111,7 @@ class EmailList:
         try:
 
             # Remove the most recent entry from the database
-            self.database = DatabaseTables("cache.db")
+            self.database = DatabaseTables()
             self.database.remove_row(list(self.recipients.keys())[-1])
             self.database.close_db()
 
@@ -135,7 +135,7 @@ class EmailList:
         if result == 'yes':
 
             # Remove all from the database
-            self.database = DatabaseTables("cache.db")
+            self.database = DatabaseTables()
             self.database.clear_db()
             self.database.close_db()
 
@@ -157,7 +157,7 @@ class EmailList:
         if result == 'yes':
 
             # Remove all from the database
-            self.database = DatabaseTables("cache.db")
+            self.database = DatabaseTables()
             self.database.clear_db()
             self.database.close_db()
 
@@ -176,6 +176,6 @@ class EmailList:
     # Allows the user to use a different sender Address
     def reset_email(self):
         self.root.destroy()
-        database = DatabaseTables("sender.db")
+        database = DatabaseTables()
         database.clear_sender_info()
         database.close_db()

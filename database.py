@@ -1,16 +1,18 @@
 import sqlite3
+import os.path
 from sqlite3 import Error
 
 
 # Save currently input data in a database cache
 class DatabaseTables:
-    def __init__(self, db_file):
+    def __init__(self):
 
         # Create the connection
         self.conn = None
         self.cursor = None
+        base_dir = os.path.dirname(os.path.abspath(__file__))
         try:
-            self.conn = sqlite3.connect(db_file)
+            self.conn = sqlite3.connect(base_dir + "cache.db")
             self.cursor = self.conn.cursor()
         except Error as e:
             print(e)
@@ -21,7 +23,7 @@ class DatabaseTables:
         CREATE TABLE IF NOT EXISTS sender (
             email VARCHAR(50),
             password VARCHAR(50)
-        )
+        );
         """
         if self.conn is not None:
             self.cursor.execute(create_sender_table)

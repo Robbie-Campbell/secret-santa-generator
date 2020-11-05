@@ -1,6 +1,7 @@
+import os
 import smtplib
 import random
-from pass_hasher import decrypt_pass
+from Logic.pass_hasher import decrypt_pass
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -27,7 +28,7 @@ class Logic:
     def email_sender(self):
 
         # Create a secure connection to the server
-        database = DatabaseTables("sender.db")
+        database = DatabaseTables()
         sender_email = next(iter(database.get_sender_info()))
         password = decrypt_pass(next(iter(database.get_sender_info().values())))
         database.close_db()
@@ -46,9 +47,10 @@ class Logic:
                 message = MIMEMultipart('related')
                 message['Subject'] = "HO HO HO It's Santa!"
                 message_alt = MIMEMultipart('alternative')
+                base_dir = os.path.dirname(os.path.abspath(__file__))
                 message.attach(message_alt)
 
-                image = open("santa.jpg", "rb")
+                image = open(base_dir + "\\santa.jpg", "rb")
                 santa_clause = MIMEImage(image.read())
                 image.close()
                 santa_clause.add_header("Content-ID", "<santa>")

@@ -3,9 +3,9 @@ from tkinter import ttk
 from tkinter.font import Font
 from tkinter import messagebox
 import webbrowser
-from pass_hasher import encrypt_pass
+from Logic.pass_hasher import encrypt_pass
 from database import DatabaseTables
-from email_list import EmailList
+from GUI.email_list import EmailList
 
 # This class sets the email and app password of the sender device
 
@@ -58,7 +58,7 @@ class Sender:
 
             # Makes sure the email address is a valid one
             if self.email_input.get().__contains__("@gmail.com"):
-                database = DatabaseTables("sender.db")
+                database = DatabaseTables()
                 database.clear_sender_info()
 
                 # Enters data into database with encryption
