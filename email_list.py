@@ -5,11 +5,11 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter.font import Font
 
-from database import Database
+from database import DatabaseTables
 from logic import EmailList
 
 
-class GUI:
+class EmailList:
     def __init__(self):
 
         # Define frame and root variables
@@ -21,7 +21,7 @@ class GUI:
         self.frame = tk.Frame(master=self.root).grid()
 
         # Define a database to save user progress and populate the dictionary with existing data
-        self.database = Database("cache.db")
+        self.database = DatabaseTables("cache.db")
         self.recipients = self.database.select_data()
 
         # Create Output area for names to be checked
@@ -86,15 +86,15 @@ class GUI:
         # Add to the dictionary
         else:
             # Input the values into the cache database
-            self.database = Database("cache.db")
-            enter_value = (self.name_input.get(), self.email_input.get())
+            self.database = DatabaseTables("cache.db")
+            enter_value = (self.name_input.get().capitalize(), self.email_input.get())
             self.database.insert_data(enter_value)
             self.database.close_db()
 
             # Save the values in current memory
-            self.recipients[self.name_input.get()] = self.email_input.get()
+            self.recipients[self.name_input.get().capitalize()] = self.email_input.get()
             self.names_display.config(state="normal")
-            output_value = self.name_input.get() + " : " + self.email_input.get()
+            output_value = self.name_input.get().capitalize() + " : " + self.email_input.get()
             self.names_display.insert("end", output_value + "\n" + "-" * round(len(output_value) * 1.5) + "\n")
             self.names_display.config(state="disabled")
 
@@ -108,7 +108,7 @@ class GUI:
         try:
 
             # Remove the most recent entry from the database
-            self.database = Database("cache.db")
+            self.database = DatabaseTables("cache.db")
             self.database.remove_row(list(self.recipients.keys())[-1])
             self.database.close_db()
 
@@ -132,7 +132,7 @@ class GUI:
         if result == 'yes':
 
             # Remove all from the database
-            self.database = Database("cache.db")
+            self.database = DatabaseTables("cache.db")
             self.database.clear_db()
             self.database.close_db()
 
@@ -154,7 +154,7 @@ class GUI:
         if result == 'yes':
 
             # Remove all from the database
-            self.database = Database("cache.db")
+            self.database = DatabaseTables("cache.db")
             self.database.clear_db()
             self.database.close_db()
 

@@ -48,9 +48,9 @@ class EmailList:
                 image.close()
                 santa_clause.add_header("Content-ID", "<santa>")
                 present_receiver = self.shuffle()[index]
-                message_text = MIMEText("<h1>It's Christmas time {}!</h1><br><p>It's time to celebrate christmas, "
-                                        "with secret santa! Don't tell anyone, but you have <br><h1>{}</h1><br> as "
-                                        "secret santa, good luck and have a <h4>Merry Christmas!</h4>"
+                message_text = MIMEText("<h1>It's Christmas time {}!</h1><br><p>It's time to celebrate christmas "
+                                        "and i'm your secret santa! Don't tell anyone, but you have <h1>{}</h1> as "
+                                        "your gift receiver, good luck and have a <b>Merry Christmas!</b><br>"
                                         "<img src='cid:santa'>!".format(name, present_receiver), 'html')
                 message_alt.attach(message_text)
                 message['From'] = sender_email

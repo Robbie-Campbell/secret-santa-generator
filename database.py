@@ -3,7 +3,7 @@ from sqlite3 import Error
 
 
 # Save currently input data in a database cache
-class Database:
+class DatabaseTables:
     def __init__(self, db_file):
 
         # Create the connection
@@ -15,8 +15,38 @@ class Database:
         except Error as e:
             print(e)
 
-    # Create the table
-    def table_schema(self):
+    # Functions for setting the sender email
+    def create_sender_table(self):
+        create_sender_table = """
+        CREATE TABLE IF NOT EXISTS sender (
+            email VARCHAR(50),
+            password VARCHAR(50)
+        )
+        """
+        if self.conn is not None:
+            self.cursor.execute(create_sender_table)
+        else:
+            print("error, did not work")
+
+    # Create the main user
+    def create_sender(self, details):
+        insert_script = """
+        INSERT INTO sender(email,password) VALUES (?, ?)
+        """
+        self.cursor.execute(insert_script, details)
+        self.conn.commit()
+
+    # get the info to send to the recipients
+    def get_sender_info(self):
+        self.cursor.execute("SELECT * FROM sender")
+        dictionary = {}
+        values = self.cursor.fetchall()
+        for value in values:
+            dictionary[value[0]] = value[1]
+        return dictionary
+
+    # Create the name list table
+    def create_name_list_table(self):
         create_main_table = """
         CREATE TABLE IF NOT EXISTS cache (
             name VARCHAR(20),
