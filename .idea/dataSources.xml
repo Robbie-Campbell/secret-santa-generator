@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="cache" uuid="ee56ad4d-831c-4ca1-b6ce-f3d98dcf3e8b">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\robbi\Python\secret-santa\cache.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="sender" uuid="18255fe7-553e-4833-a5fe-a4c2ec7a85a0">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\robbi\Python\secret-santa\sender.db</jdbc-url>
+    </data-source>
+  </component>
+</project>
