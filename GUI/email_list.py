@@ -164,11 +164,14 @@ class EmailList:
             # Send the emails to the end users
             send = Logic(**self.recipients)
             send.email_sender()
-            tk.messagebox.showinfo("Success!", "Emails have successfully been sent!", icon="info")
+            tk.messagebox.showinfo("Success!", "Emails have successfully been sent!\nMerry christmas!", icon="info")
             self.root.destroy()
 
         else:
             return
+<<<<<<< HEAD:gui.py
+        self.name.focus_set()
+=======
 
         # Reset to default
         self.name.focus_set()
@@ -179,3 +182,4 @@ class EmailList:
         database = DatabaseTables()
         database.clear_sender_info()
         database.close_db()
+>>>>>>> 086e020076b72bda2b9a44e59e3793f0ad585bd4:GUI/email_list.py
